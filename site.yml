@@ -1,0 +1,23 @@
+---
+- name: Install docker tools
+  hosts: default
+  tasks:
+    - name: "Update apt cache"
+      apt:
+        update_cache: yes
+        cache_valid_time: 300
+    - name: Ensures we may use https for apt
+      apt:
+        name: apt-transport-https
+        state: latest
+    - name: Ensures docker apt key is present
+      apt_key:
+        keyserver: p80.pool.sks-keyservers.net
+        id: 58118E89F3A912897C070ADBF76221572C52609D
+    - name: Ensure docker debian repository is used
+      apt_repository:
+        repo: "deb https://apt.dockerproject.org/repo debian-{{ansible_distribution_release}} main"
+    - name: "Ensures docker engine is installed"
+      apt:
+        name: docker-engine
+        state: latest
